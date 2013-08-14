@@ -27,13 +27,15 @@
 	<hr/>
 
 	<h2>Search</h2>
-	<form>
-		<input type="text" id="search_input" value="llama" />
-		<input type="submit" value="Search" />
-	</form>
+	<!-- Going to just do it in javascript, no need for a page reload, so removed the form -->
+	<input type="text" id="search_input" value="llama" />
+	<input type="button" value="Search" onclick="search_text()" />
+	<!-- I've added a toggle to allow you to ignore case -->
+	<label for="ignore_case"><input type="checkbox" id="ignore_case">Ignore Case</label>
+	
 
 	<h3>Results</h3>
-	Found 0 occurances of the word "llama" in the below text.
+	Found <span id="num_matches">0</span> occurances of the word "<span id="input_text">llama</span>" in the below text.
 
 	<hr/>
 
@@ -53,6 +55,36 @@
 		</p>
 	</div>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+	function search_text() {
+		// Get search string and check if we are ignoring case
+		var search_string = document.getElementById('search_input').value;
+		var ignore_case = document.getElementById('ignore_case').checked;
+		if (search_string === '') {
+			alert('You must input something for which to search.');
+			return;
+		}
+		// Get text, if textContent is supported use it, otherwise pull innerHTML and try to strip out the html code
+		var search_element = document.getElementById('search_text')
+		if (search_element.hasOwnProperty('textContent')) {
+			var text = search_element.textContent;
+		} else {
+			var text = search_element.innerHTML.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+		}
+		// Now search the text for the search_input
+		var count = 0;
+		var modifiers = (ignore_case) ? 'gi' : 'g';
+		var regex = new RegExp(search_string, modifiers);
+		var matches  = text.match(regex);
+		if (matches !== null) {
+			count = matches.length;
+		}
+		// Update info
+		document.getElementById('num_matches').innerHTML = count;
+		document.getElementById('input_text').innerHTML = search_string;
+	}
+</script>
 
 </body>
 </html>

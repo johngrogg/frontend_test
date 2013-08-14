@@ -6,10 +6,35 @@
 	<style type="text/css">
 		#rotator {
 			width: 450px;
-			height: 300px;
+			height: 266px;
 			border: 1px solid black;
-			background: #aaa;
+			background: black;
 			text-align: center;
+			position: relative;
+		}
+		
+		.image_block {
+			display: inline;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+		
+		.image_title {
+			width: 100%;
+			color: black;
+			position: absolute;
+			bottom: 3px;
+			background-color: rgba(255,255,255,.5);
+		}
+		
+		.image_title h4 {
+			margin: 0px;
+		}
+		
+		.image_title p {
+			margin: 0px;
+			text-align: left;
 		}
 	</style>
 </head>
@@ -32,28 +57,89 @@
 
 	<hr />
 
-	<h4>Katarina</h4>
-	<p>Fruitcake bonbon donut jelly-o brownie biscuit marzipan pie.</p>
-	<img src="../img/kat_1.jpg" /><br/>
-
-	<h4>Red Card Katarina</h4>
-	<p>Cheesecake marzipan cupcake biscuit candy canes pudding.</p>
-	<img src="../img/kat_2.jpg" /><br/>
-
-	<h4>Kitty Cat Katarina</h4>
-	<p>Applicake topping halvah lemon drops wypas cotton candy.</p>
-	<img src="../img/kat_3.jpg" /><br/>
-
-	<h4>High Command Katarina</h4>
-	<p>Oat cake macaroon souffle cupcake chupa chups chocolate bar bear claw dragee lemon drops.</p>
-	<img src="../img/kat_4.jpg" /><br/>
-
-	<hr/>
-
 	<div id="rotator">
-		Rotator Here
+		<div class="image_block" id="image1">
+			<div class="image_title">
+				<h4>Katarina</h4>
+				<p>Fruitcake bonbon donut jelly-o brownie biscuit marzipan pie.</p>
+			</div>
+			<img src="../img/kat_1.jpg" />
+		</div>
+		
+		<div class="image_block" id="image2" style="display: none;">
+			<div class="image_title">
+				<h4>Red Card Katarina</h4>
+				<p>Cheesecake marzipan cupcake biscuit candy canes pudding.</p>
+			</div>
+			<img src="../img/kat_2.jpg" />
+		</div>
+		
+		<div class="image_block" id="image3" style="display: none;">
+			<div class="image_title">
+				<h4>High Command Katarina</h4>
+				<p>Oat cake macaroon souffle cupcake chupa chups chocolate bar bear claw dragee lemon drops.</p>
+			</div>
+			<img src="../img/kat_4.jpg" />
+		</div>
 	</div>
 </div>
 
+
+<script type="text/javascript" charset="utf-8">
+	// Note that all of this javascript would be much cleaner using jQuery, and some of the browser edge-cases would be much better covered as well
+
+	// Image counter and animation counter and timer
+	var i = 1;
+	var aw = 0;
+	var animation_timer;
+	// Trigger rotator on document ready. Note this would use $(document).ready() instead, to cover older browsers
+	document.addEventListener('DOMContentLoaded',function(){
+		setInterval(function() { rotate_image() }, 3000);
+	})
+	
+	function rotate_image() {
+		// Get last image element
+		var last_image = document.getElementById("image"+i);
+		// Get next image element
+		i = (i == 3) ? 1 : i+1;
+		var next_image = document.getElementById("image"+i);
+		// Swap images
+		fade_out(last_image);
+		fade_in(next_image);
+	}
+	
+	function fade_out(element) {
+		// Start at 1 opacity, just in case it isn't set yet
+		element.style.opacity = 1;
+		// Start animation
+		window.fade_out_timer = setInterval(function() {
+			// Drop opacity by .1, using Math.round to keep us safe from parseFloat issues
+			var new_opacity = Math.round((parseFloat(element.style.opacity)-.1)*10)/10;
+			element.style.opacity = new_opacity;
+			if (new_opacity < 0) {
+				// Done fading out, stop animation and clean up style properties
+				clearInterval(fade_out_timer);
+				element.style.opacity = 0;
+				element.style.display = "none";
+			}
+		}, 100);
+	}
+	
+	function fade_in(element) {
+		// Start at 0 opacity, just in case and show element after
+		element.style.opacity = 0;
+		element.style.display = "block";
+		window.fade_in_timer = setInterval(function() {
+			// Increase opacity by .1, again using Math.round to keep us safe from parseFloat issues
+			var new_opacity = Math.round((parseFloat(element.style.opacity)+.1)*10)/10;
+			element.style.opacity = new_opacity;
+			if (new_opacity >= 1) {
+				// Done fading in, stop animation and clean up opacity
+				clearInterval(fade_in_timer);
+				element.style.opacity = 1;
+			}
+		}, 100);
+	}
+</script>
 </body>
 </html>

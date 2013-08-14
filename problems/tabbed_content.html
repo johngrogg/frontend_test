@@ -17,6 +17,46 @@
 			border: 1px solid #CCCCCC;
 			vertical-align:middle; margin-bottom: 3px;
 		}
+		
+		#tabs {
+			list-style: none;
+			padding: 0px 15px;
+			margin: 0px;
+		}
+		
+		#tabs li {
+			display: inline-block;
+			background-color: white;
+			padding: 3px;
+			margin-right: 5px;
+			-webkit-border-top-left-radius: 5px;
+			-webkit-border-top-right-radius: 5px;
+			-moz-border-radius-topleft: 5px;
+			-moz-border-radius-topright: 5px;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			text-align: center;
+			font-size: 16pt;
+			color: black;
+			cursor: pointer;
+		}
+		
+		#tabs li.active {
+			background-color: #DC291E;
+			color: white;
+		}
+		
+		#tabs_container {
+			padding: 15px;
+			background-color: white;
+			color: black;
+			height: 100px;
+			border-top: 1px solid #DC291E;
+		}
+		
+		#tabs_container p {
+			margin: 0px;
+		}
 	</style>
 </head>
 <body>	
@@ -38,25 +78,54 @@
 		</div>
 
 		<hr/>
-
+		
 		<div id="container">
-			Turn this content into a tabbed container.
-
-			<h3>Tab 1</h3>
-			<p>
-				Gingerbread muffin gummies gingerbread macaroon. Lollipop candy applicake toffee faworki. Bear claw topping jelly toffee toffee powder tiramisu candy chupa chups. Chupa chups dragee icing applicake chupa chups dessert. Croissant jelly faworki marzipan tootsie roll marshmallow. Marshmallow toffee sweet roll fruitcake.
-			</p>
-
-			<h3>Tab 2</h3>
-			<p>
-				Chocolate faworki croissant brownie halvah macaroon gummi bears wypas. Chupa chups icing gummies pudding dessert carrot cake. Cupcake jelly beans sweet roll icing ice cream apple pie tootsie roll gummi bears marzipan. Brownie gummies chupa chups pie. Cupcake jujubes topping. 
-			</p>
-
-			<h3>Tab 3</h3>
-			<p>
-				Cheesecake jelly beans ice cream lollipop sweet pastry. Chupa chups dessert cheesecake sesame snaps. Cookie ice cream candy canes pastry cake muffin. Icing chocolate sweet gummi bears powder oat cake oat cake lemon drops.
-			</p>
+			<ul id="tabs">
+				<li onclick="switch_tab(this)" id="tab1" class="active">Tab 1</li>
+				<li onclick="switch_tab(this)" id="tab2">Tab 2</li>
+				<li onclick="switch_tab(this)" id="tab3">Tab 3</li>
+			</ul>
+			<div id="tabs_container">
+				<div id="tab1_container">
+					<p>
+						Gingerbread muffin gummies gingerbread macaroon. Lollipop candy applicake toffee faworki. Bear claw topping jelly toffee toffee powder tiramisu candy chupa chups. Chupa chups dragee icing applicake chupa chups dessert. Croissant jelly faworki marzipan tootsie roll marshmallow. Marshmallow toffee sweet roll fruitcake.
+					</p>
+				</div>
+			
+				<div id="tab2_container" style="display: none;">
+					<p>
+						Chocolate faworki croissant brownie halvah macaroon gummi bears wypas. Chupa chups icing gummies pudding dessert carrot cake. Cupcake jelly beans sweet roll icing ice cream apple pie tootsie roll gummi bears marzipan. Brownie gummies chupa chups pie. Cupcake jujubes topping. 
+					</p>
+				</div>
+			
+				<div id="tab3_container" style="display: none;">
+					<p>
+						Cheesecake jelly beans ice cream lollipop sweet pastry. Chupa chups dessert cheesecake sesame snaps. Cookie ice cream candy canes pastry cake muffin. Icing chocolate sweet gummi bears powder oat cake oat cake lemon drops.
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
+
+<script type="text/javascript" charset="utf-8">
+	// Note that I would normally connect the tabs using jQuery instead of via the element's onclick attribute,
+	// but to get this done in a timely manner I am doing it this way to cover all browsers easily
+	
+	var active_tab_id = 'tab1';
+	function switch_tab(self) {
+		// Check if we are actually switching
+		if (active_tab_id !== self.id) {
+			if (active_tab_id !== '') {
+				// Hide old tab content and make not active
+				document.getElementById(active_tab_id+'_container').style.display = "none";
+				document.getElementById(active_tab_id).className = "";
+			}
+			// Show new content for tab clicked and make active
+			active_tab_id = self.id;
+			document.getElementById(active_tab_id+'_container').style.display = "block";
+			document.getElementById(active_tab_id).className = "active";
+		}
+	}
+</script>
 </html>
