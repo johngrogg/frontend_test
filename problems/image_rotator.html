@@ -25,7 +25,8 @@
 			color: black;
 			position: absolute;
 			bottom: 3px;
-			background-color: rgba(255,255,255,.5);
+			background-color: white; /* Fallback */
+			background-color: rgba(255,255,255,.3);
 		}
 		
 		.image_title h4 {
@@ -92,10 +93,20 @@
 	var i = 1;
 	var aw = 0;
 	var animation_timer;
-	// Trigger rotator on document ready. Note this would use $(document).ready() instead, to cover older browsers
-	document.addEventListener('DOMContentLoaded',function(){
+	
+	// Trigger rotator on document ready. Note I would normally use $(document).ready() instead, to cover older browsers. This should cover most
+	if (document.addEventListener) {
+		document.addEventListener('DOMContentLoaded',function(){
+			start_rotation();
+		})
+	} else {
+		window.onload = function() { start_rotation() };
+	}
+	
+	
+	function start_rotation() {
 		setInterval(function() { rotate_image() }, 3000);
-	})
+	}
 	
 	function rotate_image() {
 		// Get last image element
