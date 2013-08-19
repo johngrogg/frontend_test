@@ -27,9 +27,9 @@
 	<hr/>
 
 	<h2>Search</h2>
-	<!-- Going to just do it in javascript, no need for a page reload, so removed the form -->
+	<!-- Going to just do the search in javascript, no need for a page reload, so removed the form -->
 	<input type="text" id="search_input" value="llama" />
-	<input type="button" value="Search" onclick="search_text()" />
+	<input type="button" id="search_button" value="Search" />
 	<!-- I've added a toggle to allow you to ignore case -->
 	<label for="ignore_case"><input type="checkbox" id="ignore_case">Ignore Case</label>
 	
@@ -57,6 +57,24 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+	// Add search_button click event on document ready. 
+	// Note I would normally use $(document).ready() instead, to cover older browsers. This, however, should cover most.
+	if (document.addEventListener) {
+		document.addEventListener('DOMContentLoaded',function(){
+			tie_search_button();
+		})
+	} else {
+		window.onload = function() { tie_search_button() };
+	}
+	
+	// Add search_text as as onclick callback
+	function tie_search_button() {
+		document.getElementById('search_button').onclick = search_text;
+	} 
+	
+	// Gets the search string from search_input, then gets the ignore_case flag.
+	// Proceeds to pull the text from search_text (stripping out the html code if needed).
+	// Finally finds all matching substrings using regex and updates the results display.
 	function search_text() {
 		// Get search string and check if we are ignoring case
 		var search_string = document.getElementById('search_input').value;

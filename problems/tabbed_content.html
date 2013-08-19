@@ -41,7 +41,7 @@
 			cursor: pointer;
 		}
 		
-		#tabs li.active {
+		#tabs .active {
 			background-color: #DC291E;
 			color: white;
 		}
@@ -81,9 +81,9 @@
 		
 		<div id="container">
 			<ul id="tabs">
-				<li onclick="switch_tab(this)" id="tab1" class="active">Tab 1</li>
-				<li onclick="switch_tab(this)" id="tab2">Tab 2</li>
-				<li onclick="switch_tab(this)" id="tab3">Tab 3</li>
+				<li id="tab1" class="active">Tab 1</li>
+				<li id="tab2">Tab 2</li>
+				<li id="tab3">Tab 3</li>
 			</ul>
 			<div id="tabs_container">
 				<div id="tab1_container">
@@ -109,20 +109,40 @@
 </body>
 
 <script type="text/javascript" charset="utf-8">
-	// Note that I would normally connect the tabs using jQuery instead of via the element's onclick attribute,
-	// but to get this done in a timely manner I am doing it this way to cover all browsers easily
+	// Add tabs click event on document ready. 
+	// Note I would normally use $(document).ready() instead, to cover older browsers. This, however, should cover most.
+	if (document.addEventListener) {
+		document.addEventListener('DOMContentLoaded',function(){
+			tie_tabs();
+		})
+	} else {
+		window.onload = function() { tie_tabs() };
+	}
+
+	// Add switch_tab as as onclick callback for each tab
+	function tie_tabs() {
+		var tabs = document.getElementById('tabs').children;
+		for (var i = 0; i < tabs.length; i++) {
+			var child = tabs[i];
+			// Confirm the child is an li
+			if (child.nodeName == 'LI') {
+				child.onclick = switch_tab;
+			}
+		}
+	} 
 	
+	// Switches from one tab to another. active_tab_id is used to make hiding and removing the active class faster.
 	var active_tab_id = 'tab1';
-	function switch_tab(self) {
+	function switch_tab() {
 		// Check if we are actually switching
-		if (active_tab_id !== self.id) {
+		if (active_tab_id !== this.id) {
 			if (active_tab_id !== '') {
 				// Hide old tab content and make not active
 				document.getElementById(active_tab_id+'_container').style.display = "none";
 				document.getElementById(active_tab_id).className = "";
 			}
 			// Show new content for tab clicked and make active
-			active_tab_id = self.id;
+			active_tab_id = this.id;
 			document.getElementById(active_tab_id+'_container').style.display = "block";
 			document.getElementById(active_tab_id).className = "active";
 		}

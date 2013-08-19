@@ -89,12 +89,15 @@
 <script type="text/javascript" charset="utf-8">
 	// Note that all of this javascript would be much cleaner using jQuery, and some of the browser edge-cases would be much better covered as well
 
-	// Image counter and animation counter and timer
-	var i = 1;
-	var aw = 0;
-	var animation_timer;
+	// Image iterator, number of images to iterate, and various options
+	// Note that for iteration of the images I could alternatively get an array of all the div elements within the rotator and step through that, but to save a bit of javascript processing time I instead am using uniform id attributes on each of the divs.
+	var image_iterator = 1;
+	var num_images = 3; /* Note that this would be fed in from the PHP source if this were a dynamic page via a <?=count($images);?> call. */
+	var image_display_duration = 3000;
+	var transition_duration = 100;
 	
-	// Trigger rotator on document ready. Note I would normally use $(document).ready() instead, to cover older browsers. This should cover most
+	// Trigger rotator on document ready. 
+	// Note I would normally use $(document).ready() instead, to cover older browsers. This, however, should cover most.
 	if (document.addEventListener) {
 		document.addEventListener('DOMContentLoaded',function(){
 			start_rotation();
@@ -103,24 +106,27 @@
 		window.onload = function() { start_rotation() };
 	}
 	
-	
+	// Starts an Interval call of rotate_image(), which does the actual image switching.
+	// Uses image_display_duration to control how long to wait between each rotation.
 	function start_rotation() {
-		setInterval(function() { rotate_image() }, 3000);
+		setInterval(function() { rotate_image() }, image_display_duration);
 	}
 	
+	// Gets the current next image blocks and starts the fade animations for each
 	function rotate_image() {
 		// Get last image element
-		var last_image = document.getElementById("image"+i);
+		var last_image = document.getElementById("image"+image_iterator);
 		// Get next image element
-		i = (i == 3) ? 1 : i+1;
-		var next_image = document.getElementById("image"+i);
+		image_iterator = (image_iterator == num_images) ? 1 : image_iterator+1;
+		var next_image = document.getElementById("image"+image_iterator);
 		// Swap images
 		fade_out(last_image);
 		fade_in(next_image);
 	}
 	
+	// Fade out animation. Lowers opacity by 0.1 per transition_duration ms
 	function fade_out(element) {
-		// Start at 1 opacity, just in case it isn't set yet
+		// Start at 1 opacity, just in case it isn't yet set
 		element.style.opacity = 1;
 		// Start animation
 		window.fade_out_timer = setInterval(function() {
@@ -133,9 +139,10 @@
 				element.style.opacity = 0;
 				element.style.display = "none";
 			}
-		}, 100);
+		}, transition_duration);
 	}
 	
+	// Fade in animation. Increases opacity by 0.1 per transition_duration ms
 	function fade_in(element) {
 		// Start at 0 opacity, just in case and show element after
 		element.style.opacity = 0;
@@ -149,7 +156,7 @@
 				clearInterval(fade_in_timer);
 				element.style.opacity = 1;
 			}
-		}, 100);
+		}, transition_duration);
 	}
 </script>
 </body>
