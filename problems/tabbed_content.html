@@ -108,7 +108,9 @@
 	</div>
 </body>
 
+<script src="../js/transition.js"></script>
 <script type="text/javascript" charset="utf-8">
+	var transition = new Transition();
 	// Add tabs click event on document ready. 
 	// Note I would normally use $(document).ready() instead, to cover older browsers. This, however, should cover most.
 	if (document.addEventListener) {
@@ -138,12 +140,15 @@
 		if (active_tab_id !== this.id) {
 			if (active_tab_id !== '') {
 				// Hide old tab content and make not active
-				document.getElementById(active_tab_id+'_container').style.display = "none";
+				var old_tab = document.getElementById(active_tab_id+'_container');
 				document.getElementById(active_tab_id).className = "";
+			} else {
+				old_tab = null;
 			}
 			// Show new content for tab clicked and make active
 			active_tab_id = this.id;
-			document.getElementById(active_tab_id+'_container').style.display = "block";
+			var new_tab = document.getElementById(active_tab_id+'_container');
+			transition.run(old_tab,new_tab);
 			document.getElementById(active_tab_id).className = "active";
 		}
 	}
